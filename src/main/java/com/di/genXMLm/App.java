@@ -10,266 +10,196 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
  
 public class App
  
 {
     public static void main(String[] args) throws JAXBException, DatatypeConfigurationException, FileNotFoundException
     {
-    	System.out.println("Wprowadz liczbe autorow: ");
-    	Scanner read = new Scanner(System.in); //obiekt do odebrania danych od użytkownika
-    	int autorow = read.nextInt();
-    	HashMap<String, Integer> counts= new HashMap<String, Integer>();
+    	Logger logger = Logger.getLogger("logger");	
+    	logger.setLevel(Level.INFO);
     	
-    	//SETUP//
-    	double mnoznik = 1;   // mnoznik 1 = 0,6 MB danych
-    	counts.put("authors", autorow);
-    	counts.put("customers", 5*autorow);
-    	counts.put("books", 10*autorow);
-    	counts.put("order", 25*autorow);
+    	System.out.println("Wprowadz liczbe autorow: "); 	
+    	Scanner read = new Scanner(System.in);
+    	int liczba_autorow = read.nextInt();
+    	
+    	HashMap<String, Integer> counts= new HashMap<String, Integer>();
+       	//SETUP//
+     	counts.put("authors", liczba_autorow);
+    	counts.put("customers", 5*liczba_autorow);
+    	counts.put("books", 10*liczba_autorow);
+    	counts.put("order", 25*liczba_autorow);
     	//SETUP - end//
     	
-        ObjectFactory factory = new ObjectFactory();
+        ObjectFactory objectFactory = new ObjectFactory();
         
-        AuthorsType authors = factory.createAuthorsType();
-        for(int i=0; i<counts.get("authors"); i++)
-        {
-        	if(i % 100 == 0)System.out.println("a: "+i+"/"+counts.get("authors"));
-        	AuthorType author = factory.createAuthorType();
-        	author.setFirstName(randomString(true, 10, true, true));
-        	author.setLastName(randomString(true, 10, true, true));
-        	author.setPseudonym(randomString(true, 10, false, true));
+        AuthorsType authorsType = objectFactory.createAuthorsType();
+        for (int it_authors=0; it_authors<counts.get("authors"); it_authors++)        {
+        	if (it_authors % 10000 == 0){
+        		StringBuilder sb = new StringBuilder("a: ");
+        		sb.append(it_authors).append("/").append(counts.get("authors"));
+        		logger.info(sb.toString());
+        	}
+        	AuthorType authorType = objectFactory.createAuthorType();
+        	authorType.setFirstName(randomString(true, 10, true, true));
+        	authorType.setLastName(randomString(true, 10, true, true));
+        	authorType.setPseudonym(randomString(true, 10, false, true));
         	
-        	String code = "";
-        	/*int result;
-        	do
-        	{
-        		result = 0;
-        		code = randomString(false, 15, false, false);
-        		if(authors.getAuthor().size() > 0)
-        		{
-	         		for(int test = 0; test < authors.getAuthor().size(); test++ )
-	        		{
-	        			if(code.contentEquals(authors.getAuthor().get(test).getCode()))result = 1;
-	        		}
-        		}
-        	}while(result != 0);*/
-        	code = randomString(false, 15, false, false);
-        	author.setCode(code+i);
-        	authors.getAuthor().add(author);
+        	String code = randomString(false, 15, false, false);
+        	StringBuilder sb = new StringBuilder(code);
+        	sb.append(it_authors);
+        	authorType.setCode(sb.toString());
+        	authorsType.getAuthor().add(authorType);
         }
-        System.out.println("Generacja autorow zakonczona");
         
-        CustomersType customers = factory.createCustomersType();
-        for(int i=0; i<counts.get("customers"); i++)
-		{
-        	if(i % 100 == 0)System.out.println("c: "+i+"/"+counts.get("customers"));
-			CustomerType customer = factory.createCustomerType();
+        logger.info("Generowanie autorow zakonczone");
+        
+        CustomersType customersType = objectFactory.createCustomersType();
+        for (int it_customers=0; it_customers<counts.get("customers"); it_customers++){
+        	if (it_customers % 10000 == 0){
+        		StringBuilder sb = new StringBuilder("c: ");
+        		sb.append(it_customers).append("/").append(counts.get("customers"));
+        		logger.info(sb.toString());;
+        	}
 			
-        	// Unique code
-        	String code = "";
-        	/*int result;
-        	do
-        	{
-        		result = 0;
-        		code = randomString(false, 15, false, false);
-        		if(customers.getCustomer().size() > 0)
-        		{
-	         		for(int test = 0; test < customers.getCustomer().size(); test++ )
-	        		{
-	        			if(code.contentEquals(customers.getCustomer().get(test).getCode()))result = 1;
-	        		}
-        		}
-        	}while(result != 0);*/
-        	code = randomString(false, 15, false, false);
-        	customer.setCode(code+i);
-
-        	// Unique Barcode
-        	/*do
-        	{
-        		result = 0;
-        		code = randomString(false, 32, false, false);
-        		if(customers.getCustomer().size() > 0)
-        		{
-	         		for(int test = 0; test < customers.getCustomer().size(); test++ )
-	        		{
-	        			if(code.contentEquals(customers.getCustomer().get(test).getBarCode()))result = 1;
-	        		}
-        		}
-        	}while(result != 0); */    
+        	CustomerType customerType = objectFactory.createCustomerType();
+        	String code = randomString(false, 15, false, false);
+        	StringBuilder sb = new StringBuilder(code);
+        	sb.append(it_customers);
+        	customerType.setCode(sb.toString());
+        	
         	code = randomString(false, 32, false, false);
-			customer.setBarCode(code+i);
-			customer.setFirstName(randomString(true, 10, true, true));
-			customer.setLastName(randomString(true, 10, true, true));
+        	sb = new StringBuilder(code);
+        	sb.append(it_customers);
+			customerType.setBarCode(sb.toString());
 			
-        	// Unique Pesel
-			/*
-        	do
-        	{
-        		result = 0;
-        		code = randomString(false, 10, false, false);
-        		if(customers.getCustomer().size() > 0)
-        		{
-	         		for(int test = 0; test < customers.getCustomer().size(); test++ )
-	        		{
-	        			if(code.contentEquals(customers.getCustomer().get(test).getPesel()))result = 1;
-	        		}
-        		}
-        	}while(result != 0);
-        	*/
-			code = randomString(false, 10-(Integer.toString(i).length()), false, false);
-			customer.setPesel(code+i);
+			customerType.setFirstName(randomString(true, 10, true, true));
+			customerType.setLastName(randomString(true, 10, true, true));
+			code = randomString(false, 10-(Integer.toString(it_customers).length()), false, false);
 			
-        	// Unique Phone
-			/*
-        	do
-        	{
-        		result = 0;
-        		code = randomString(false, 9, false, false);
-        		if(customers.getCustomer().size() > 0)
-        		{
-	         		for(int test = 0; test < customers.getCustomer().size(); test++ )
-	        		{
-	        			if(code.contentEquals(customers.getCustomer().get(test).getPhone()))result = 1;
-	        		}
-        		}
-        	}while(result != 0);
-        	*/
-			code = randomString(false, 9-(Integer.toString(i).length()), false, false);
-			customer.setPhone(code+i);
-			customer.setAddress(randomString(true, 32, true, true));
-			customers.getCustomer().add(customer);
+	      	sb = new StringBuilder(code);
+        	sb.append(it_customers);
+			customerType.setPesel(sb.toString());
+			
+			code = randomString(false, 9-(Integer.toString(it_customers).length()), false, false);
+	      	sb = new StringBuilder(code);
+        	sb.append(it_customers);
+			customerType.setPhone(sb.toString());
+			
+			customerType.setAddress(randomString(true, 32, true, true));
+			customersType.getCustomer().add(customerType);
 		}
-        System.out.println("Generacja klientow zakonczona");
+        logger.info("Generowanie klientow zakonczone");
         
-        BooksType books = factory.createBooksType();
-        for(int i = 0; i<counts.get("books"); i++)
+        BooksType booksType = objectFactory.createBooksType();
+        for (int it_books = 0; it_books<counts.get("books"); it_books++)
         {
-        	if(i % 100 == 0)System.out.println("b: "+i+"/"+counts.get("books"));
-        	BookType book = factory.createBookType();
+        	if (it_books % 10000 == 0){
+        		StringBuilder sb = new StringBuilder("c: ");
+        		sb.append(it_books).append("/").append(counts.get("books"));
+        		logger.info(sb.toString());
+        	}
+        	
+        	BookType bookType = objectFactory.createBookType();
         	int authorID = (int)Math.round(Math.random()*(counts.get("authors")-1));
-        	book.setAuthorCode(authors.getAuthor().get(authorID).getCode());
+        	bookType.setAuthorCode(authorsType.getAuthor().get(authorID).getCode());
         	
-        	// Unique BookCode
+        	String code = randomString(false, 32, false, true);
+        	StringBuilder sb = new StringBuilder(code);
+        	sb.append(it_books);
+        	bookType.setCode(sb.toString());
+        	bookType.setDescription(randomString(true, 255, true, true));
         	
-        	String code = "";
-        	int result;
-        	/*
-        	
-        	do
-        	{
-        		result = 0;
-        		code = randomString(false, 32, false, true);
-        		if(books.getBook().size() > 0)
-        		{
-	         		for(int test = 0; test < books.getBook().size(); test++ )
-	        		{
-	        			if(code.contentEquals(books.getBook().get(test).getCode()))result = 1;
-	        		}
-        		}
-        	}while(result != 0);
-        	*/
-        	code = randomString(false, 32, false, true);
-        	book.setCode(code+i);
-        	
-        	book.setDescription(randomString(true, 255, true, true));
-        	String isbn = "";
-        	// Unique ISBN
-        	/*
-        	
-        	do
-        	{
-        		result = 0;
-        		isbn = randomString(false, 32, false, false);
-        		if(books.getBook().size() > 0)
-        		{
-	         		for(int test = 0; test < books.getBook().size(); test++ )
-	        		{
-	        			if(isbn.contentEquals(books.getBook().get(test).getISBN()))result = 1;
-	        		}
-        		}
-        	}while(result != 0);
-        	*/
-        	isbn = randomString(false, 32, false, false);
-        	book.setISBN(isbn+i);
-        	
+        	String isbn = randomString(false, 32, false, false);
+        	sb = new StringBuilder(isbn);
+        	sb.append(it_books);
+        	bookType.setISBN(sb.toString());
         	
         	int price = 10+(int) Math.round(Math.random()*190);
-        	book.setPrice(Integer.toString(price));
-        	book.setTitle(randomString(true, 32, true, true));
-        	books.getBook().add(book); 	
+        	bookType.setPrice(Integer.toString(price));
+        	
+        	bookType.setTitle(randomString(true, 32, true, true));
+        	booksType.getBook().add(bookType); 	
         }
-        System.out.println("Generacja ksiazek zakonczona");
+        logger.info("Generowanie ksiazek zakonczone");
         
-        OrdersType orders = factory.createOrdersType();
-        for(int i = 0; i<counts.get("customers"); i++)
+        OrdersType ordersType = objectFactory.createOrdersType();
+        for (int it_customers = 0; it_customers<counts.get("customers"); it_customers++)
         {
-        	if(i % 100 == 0)System.out.println("o: "+i+"/"+counts.get("customers"));
-        	for(int cust_ord = 0; cust_ord<5; cust_ord++)
-        	{
-	        	OrderType order = factory.createOrderType();
-	        	order.setBookCode("ex");
+        	if (it_customers % 10000 == 0){
+        		StringBuilder sb = new StringBuilder("o: ");
+        		sb.append(it_customers).append("/").append(counts.get("customers"));
+        		logger.info(sb.toString());
+        	}
+        	for (int cust_ord = 0; cust_ord<5; cust_ord++){
+	        	OrderType orderType = objectFactory.createOrderType();
 	        	
-	        	//randomowa data
+	        	// generowanie losowej daty
 	        	XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-	        	cal.setYear(1950+(int)Math.round(Math.random()*64));
-	        	cal.setMonth((int)Math.round(Math.random()*11)+1);
-	        	cal.setDay((int)Math.round(Math.random()*30)+1);
-	        	cal.setHour((int)Math.round(Math.random()*23));
-	        	cal.setMinute((int)Math.round(Math.random()*59));
-	        	cal.setSecond((int)Math.round(Math.random()*59));
-	        	order.setOrderDate(cal);
+	        	Random rand = new Random();
+	        	cal.setYear(1950+rand.nextInt(64));
+	        	cal.setMonth(rand.nextInt(11)+1);
+	        	cal.setDay(rand.nextInt(30)+1);
+	        	cal.setHour(rand.nextInt(23)+1);
+	        	cal.setMinute(rand.nextInt(59)+1);
+	        	cal.setSecond(rand.nextInt(59)+1);
+	        	orderType.setOrderDate(cal);
 	        	
-	        	//random customerCode
-	        	order.setCustomerCode(customers.getCustomer().get(i).getCode());
+	        	orderType.setCustomerCode(customersType.getCustomer().get(it_customers).getCode());
 	        	
 	        	int bookID = (int)Math.round(Math.random()*(counts.get("books")-1));
-	        	order.setBookCode(books.getBook().get(bookID).getCode());
+	        	orderType.setBookCode(booksType.getBook().get(bookID).getCode());
 	        	
-	        	orders.getOrder().add(order);
+	        	ordersType.getOrder().add(orderType);
         	}
         }
-        System.out.println("Generacja zamowien zakonczona");
+        logger.info("Generowanie zamowien zakonczone");
         
-
-        BookStoreType bst = factory.createBookStoreType();
-        bst.setAuthors(authors);
-        bst.setBooks(books);
-        bst.setCustomers(customers);
-        bst.setOrders(orders);
+        BookStoreType bookStoreType = objectFactory.createBookStoreType();
+        bookStoreType.setAuthors(authorsType);
+        bookStoreType.setBooks(booksType);
+        bookStoreType.setCustomers(customersType);
+        bookStoreType.setOrders(ordersType);
         
         JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-        JAXBElement<BookStoreType> element = factory.createBookStore(bst);
+        JAXBElement<BookStoreType> element = objectFactory.createBookStore(bookStoreType);
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty("jaxb.formatted.output",Boolean.TRUE);
               
         FileOutputStream os = new FileOutputStream(new File("wynik.xml"));
         marshaller.marshal(element,os);
     }
-    
-
-
-		static String randomString(boolean znaki, int length, boolean firstBig, boolean dynamicLength) {
-			String chars = "";
-			if(znaki)chars = "abcdefghijklmnopqrstuvwxyz "; else chars = "0123456789";
-			
-		  Random rand = new Random();
-		 if(dynamicLength) length = (int) (5+Math.round((Math.random()*(length-5))));
-		  StringBuilder buf = new StringBuilder();
-		  for (int i=0; i<length; i++) {
-		    buf.append(chars.charAt(rand.nextInt(chars.length())));
-		  }
-		  if(firstBig)
-		  {
-			  buf.setCharAt(0, (char)(buf.charAt(0)-32));
-		  }
-		  return buf.toString();
+	
+    // charSet - ustala zestaw znakow (true:cyfry;false:litery)
+    // firstLetterBig - true: pierwsza litera jest wielka
+    // dynamicLength - true: generowany ciag ma dlugosc 5 do length; false:stala dlugosc length
+    static String randomString(boolean charSet, int length, boolean firstLetterBig, boolean dynamicLength){		
+    	String chars;
+		if (charSet){
+			chars = "abcdefghijklmnopqrstuvwxyz ";
+		}else{
+			chars = "0123456789";
 		}
-
-
- 
+		
+		Random rand = new Random();
+		if (dynamicLength){ 
+			length = (int) (5+Math.round((Math.random()*(length-5))));
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<length; i++) {
+			sb.append(chars.charAt(rand.nextInt(chars.length())));
+		}
+			
+		if (firstLetterBig){
+			sb.setCharAt(0, (char)(sb.charAt(0)-32));
+		}
+		
+		return sb.toString();
+	}
 }
