@@ -38,14 +38,14 @@ public class App
         AuthorsType authors = factory.createAuthorsType();
         for(int i=0; i<counts.get("authors"); i++)
         {
-        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("authors"));
+        	if(i % 100 == 0)System.out.println("a: "+i+"/"+counts.get("authors"));
         	AuthorType author = factory.createAuthorType();
         	author.setFirstName(randomString(true, 10, true, true));
         	author.setLastName(randomString(true, 10, true, true));
         	author.setPseudonym(randomString(true, 10, false, true));
         	
         	String code = "";
-        	int result;
+        	/*int result;
         	do
         	{
         		result = 0;
@@ -57,9 +57,9 @@ public class App
 	        			if(code.contentEquals(authors.getAuthor().get(test).getCode()))result = 1;
 	        		}
         		}
-        	}while(result != 0);
-        		
-        	author.setCode(code);
+        	}while(result != 0);*/
+        	code = randomString(false, 15, false, false);
+        	author.setCode(code+i);
         	authors.getAuthor().add(author);
         }
         System.out.println("Generacja autorow zakonczona");
@@ -67,12 +67,12 @@ public class App
         CustomersType customers = factory.createCustomersType();
         for(int i=0; i<counts.get("customers"); i++)
 		{
-        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("customers"));
+        	if(i % 100 == 0)System.out.println("c: "+i+"/"+counts.get("customers"));
 			CustomerType customer = factory.createCustomerType();
 			
         	// Unique code
         	String code = "";
-        	int result;
+        	/*int result;
         	do
         	{
         		result = 0;
@@ -84,11 +84,12 @@ public class App
 	        			if(code.contentEquals(customers.getCustomer().get(test).getCode()))result = 1;
 	        		}
         		}
-        	}while(result != 0);
-        	customer.setCode(code);
+        	}while(result != 0);*/
+        	code = randomString(false, 15, false, false);
+        	customer.setCode(code+i);
 
         	// Unique Barcode
-        	do
+        	/*do
         	{
         		result = 0;
         		code = randomString(false, 32, false, false);
@@ -99,12 +100,14 @@ public class App
 	        			if(code.contentEquals(customers.getCustomer().get(test).getBarCode()))result = 1;
 	        		}
         		}
-        	}while(result != 0);      	
-			customer.setBarCode(code);
+        	}while(result != 0); */    
+        	code = randomString(false, 32, false, false);
+			customer.setBarCode(code+i);
 			customer.setFirstName(randomString(true, 10, true, true));
 			customer.setLastName(randomString(true, 10, true, true));
 			
         	// Unique Pesel
+			int result;
         	do
         	{
         		result = 0;
@@ -141,14 +144,17 @@ public class App
         BooksType books = factory.createBooksType();
         for(int i = 0; i<counts.get("books"); i++)
         {
-        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("books"));
+        	if(i % 100 == 0)System.out.println("b: "+i+"/"+counts.get("books"));
         	BookType book = factory.createBookType();
         	int authorID = (int)Math.round(Math.random()*(counts.get("authors")-1));
         	book.setAuthorCode(authors.getAuthor().get(authorID).getCode());
         	
         	// Unique BookCode
+        	
         	String code = "";
         	int result;
+        	/*
+        	
         	do
         	{
         		result = 0;
@@ -161,12 +167,15 @@ public class App
 	        		}
         		}
         	}while(result != 0);
-        	book.setCode(code);
+        	*/
+        	code = randomString(false, 32, false, true);
+        	book.setCode(code+i);
         	
         	book.setDescription(randomString(true, 255, true, true));
-        	
-        	// Unique ISBN
         	String isbn = "";
+        	// Unique ISBN
+        	/*
+        	
         	do
         	{
         		result = 0;
@@ -179,7 +188,9 @@ public class App
 	        		}
         		}
         	}while(result != 0);
-        	book.setISBN(isbn);
+        	*/
+        	isbn = randomString(false, 32, false, false);
+        	book.setISBN(isbn+i);
         	
         	
         	int price = 10+(int) Math.round(Math.random()*190);
@@ -192,7 +203,7 @@ public class App
         OrdersType orders = factory.createOrdersType();
         for(int i = 0; i<counts.get("customers"); i++)
         {
-        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("customers"));
+        	if(i % 100 == 0)System.out.println("o: "+i+"/"+counts.get("customers"));
         	for(int cust_ord = 0; cust_ord<5; cust_ord++)
         	{
 	        	OrderType order = factory.createOrderType();
