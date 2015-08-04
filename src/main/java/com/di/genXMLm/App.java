@@ -107,7 +107,7 @@ public class App
 			customer.setLastName(randomString(true, 10, true, true));
 			
         	// Unique Pesel
-			int result;
+			/*
         	do
         	{
         		result = 0;
@@ -120,9 +120,12 @@ public class App
 	        		}
         		}
         	}while(result != 0);
-			customer.setPesel(code);
+        	*/
+			code = randomString(false, 10-(Integer.toString(i).length()), false, false);
+			customer.setPesel(code+i);
 			
         	// Unique Phone
+			/*
         	do
         	{
         		result = 0;
@@ -135,7 +138,9 @@ public class App
 	        		}
         		}
         	}while(result != 0);
-			customer.setPhone(code);
+        	*/
+			code = randomString(false, 9-(Integer.toString(i).length()), false, false);
+			customer.setPhone(code+i);
 			customer.setAddress(randomString(true, 32, true, true));
 			customers.getCustomer().add(customer);
 		}
