@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
  
 public class App
- 
 {
     public static void main(String[] args) throws JAXBException, DatatypeConfigurationException, FileNotFoundException
     {
@@ -184,22 +183,18 @@ public class App
 			chars = "abcdefghijklmnopqrstuvwxyz ";
 		}else{
 			chars = "0123456789";
-		}
-		
+		}	
 		Random rand = new Random();
 		if (dynamicLength){ 
 			length = (int) (5+Math.round((Math.random()*(length-5))));
 		}
-		
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<length; i++) {
 			sb.append(chars.charAt(rand.nextInt(chars.length())));
-		}
-			
+		}	
 		if (firstLetterBig){
 			sb.setCharAt(0, (char)(sb.charAt(0)-32));
 		}
-		
 		return sb.toString();
 	}
 }
