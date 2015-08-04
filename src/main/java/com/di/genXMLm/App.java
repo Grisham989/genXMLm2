@@ -20,7 +20,7 @@ public class App
 {
     public static void main(String[] args) throws JAXBException, DatatypeConfigurationException, FileNotFoundException
     {
-    	System.out.println("Wprowadz liczbe autorow:10");
+    	System.out.println("Wprowadz liczbe autorow: ");
     	Scanner read = new Scanner(System.in); //obiekt do odebrania danych od użytkownika
     	int autorow = read.nextInt();
     	HashMap<String, Integer> counts= new HashMap<String, Integer>();
@@ -38,6 +38,7 @@ public class App
         AuthorsType authors = factory.createAuthorsType();
         for(int i=0; i<counts.get("authors"); i++)
         {
+        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("authors"));
         	AuthorType author = factory.createAuthorType();
         	author.setFirstName(randomString(true, 10, true, true));
         	author.setLastName(randomString(true, 10, true, true));
@@ -66,6 +67,7 @@ public class App
         CustomersType customers = factory.createCustomersType();
         for(int i=0; i<counts.get("customers"); i++)
 		{
+        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("customers"));
 			CustomerType customer = factory.createCustomerType();
 			
         	// Unique code
@@ -139,6 +141,7 @@ public class App
         BooksType books = factory.createBooksType();
         for(int i = 0; i<counts.get("books"); i++)
         {
+        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("books"));
         	BookType book = factory.createBookType();
         	int authorID = (int)Math.round(Math.random()*(counts.get("authors")-1));
         	book.setAuthorCode(authors.getAuthor().get(authorID).getCode());
@@ -149,12 +152,12 @@ public class App
         	do
         	{
         		result = 0;
-        		code = randomString(false, 15, false, true);
+        		code = randomString(false, 32, false, true);
         		if(books.getBook().size() > 0)
         		{
 	         		for(int test = 0; test < books.getBook().size(); test++ )
 	        		{
-	        			if(code.contentEquals(books.getBook().get(test).getCode()))test = 1;
+	        			if(code.contentEquals(books.getBook().get(test).getCode()))result = 1;
 	        		}
         		}
         	}while(result != 0);
@@ -167,7 +170,7 @@ public class App
         	do
         	{
         		result = 0;
-        		isbn = randomString(false, 12, false, false);
+        		isbn = randomString(false, 32, false, false);
         		if(books.getBook().size() > 0)
         		{
 	         		for(int test = 0; test < books.getBook().size(); test++ )
@@ -189,6 +192,7 @@ public class App
         OrdersType orders = factory.createOrdersType();
         for(int i = 0; i<counts.get("customers"); i++)
         {
+        	if(i % 100 == 0)System.out.println(i+"/"+counts.get("customers"));
         	for(int cust_ord = 0; cust_ord<5; cust_ord++)
         	{
 	        	OrderType order = factory.createOrderType();
