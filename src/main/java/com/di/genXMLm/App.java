@@ -75,23 +75,23 @@ public class App
         	code = randomString(false, 32, false, false);
         	sb = new StringBuilder(code);
         	sb.append(it_customers);
-			customerType.setBarCode(sb.toString());
+		customerType.setBarCode(sb.toString());
 			
-			customerType.setFirstName(randomString(true, 10, true, true));
-			customerType.setLastName(randomString(true, 10, true, true));
-			code = randomString(false, 10-(Integer.toString(it_customers).length()), false, false);
+		customerType.setFirstName(randomString(true, 10, true, true));
+		customerType.setLastName(randomString(true, 10, true, true));
+		code = randomString(false, 10-(Integer.toString(it_customers).length()), false, false);
 			
 	      	sb = new StringBuilder(code);
         	sb.append(it_customers);
-			customerType.setPesel(sb.toString());
+		customerType.setPesel(sb.toString());
 			
-			code = randomString(false, 9-(Integer.toString(it_customers).length()), false, false);
+		code = randomString(false, 9-(Integer.toString(it_customers).length()), false, false);
 	      	sb = new StringBuilder(code);
         	sb.append(it_customers);
-			customerType.setPhone(sb.toString());
+		customerType.setPhone(sb.toString());
 			
-			customerType.setAddress(randomString(true, 32, true, true));
-			customersType.getCustomer().add(customerType);
+		customerType.setAddress(randomString(true, 32, true, true));
+		customersType.getCustomer().add(customerType);
 		}
         logger.info("Generowanie klientow zakonczone");
         
@@ -179,22 +179,22 @@ public class App
     // dynamicLength - true: generowany ciag ma dlugosc 5 do length; false:stala dlugosc length
     static String randomString(boolean charSet, int length, boolean firstLetterBig, boolean dynamicLength){		
     	String chars;
-		if (charSet){
-			chars = "abcdefghijklmnopqrstuvwxyz ";
-		}else{
-			chars = "0123456789";
-		}	
-		Random rand = new Random();
-		if (dynamicLength){ 
-			length = (int) (5+Math.round((Math.random()*(length-5))));
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<length; i++) {
-			sb.append(chars.charAt(rand.nextInt(chars.length())));
-		}	
-		if (firstLetterBig){
-			sb.setCharAt(0, (char)(sb.charAt(0)-32));
-		}
-		return sb.toString();
+	if (charSet){
+		chars = "abcdefghijklmnopqrstuvwxyz ";
+	}else{
+		chars = "0123456789";
+	}	
+	Random rand = new Random();
+	if (dynamicLength){ 
+		length = (int) (5+Math.round((Math.random()*(length-5))));
+	}
+	StringBuilder sb = new StringBuilder();
+	for (int i=0; i<length; i++) {
+		sb.append(chars.charAt(rand.nextInt(chars.length())));
+	}	
+	if (firstLetterBig){
+		sb.setCharAt(0, (char)(sb.charAt(0)-32));
+	}
+	return sb.toString();
 	}
 }
